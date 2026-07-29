@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Athena - Campus Library Management System</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="app-container navbar-inner">
+      <div class="navbar-top">
+        <div class="brand" id="brand-logo">
+          <div class="brand-icon">📚</div>
+          <div>
+            <h1>Athena</h1>
+            <span>CAMPUS LIBRARY SYSTEM</span>
+          </div>
+        </div>
+
+        <div class="search-bar">
+          <input type="text" id="global-search" class="input-field" placeholder="Search books, authors, materials..." />
+        </div>
+
+        <div class="user-controls">
+          <select id="student-switcher" class="input-field d-none"></select>
+          
+          <button id="role-toggle-btn" class="btn btn-sm btn-secondary">
+            <span id="role-icon">👤</span> <span id="role-text">Student Mode</span>
+          </button>
+          
+          <button id="auth-btn" class="btn btn-sm btn-primary">
+            🚪 Login / Account
+          </button>
+        </div>
+      </div>
+
+      <!-- Tabs Navigation -->
+      <nav class="nav-tabs" id="nav-tabs-container">
+        <!-- Rendered via JS -->
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Areas (Views) -->
+  <main class="app-container main-content">
+    
+    <!-- STUDENT VIEWS -->
+    <div id="view-student-dashboard" class="view-section d-none">
+      <div class="dashboard-banner glass-panel">
+        <img id="dash-avatar" src="" alt="Avatar" class="dash-avatar" />
+        <div class="dash-info">
+          <h2>Welcome back, <span id="dash-name"></span>!</h2>
+          <p id="dash-details"></p>
+        </div>
+        <button class="btn btn-primary" onclick="app.switchTab('catalog')">Explore Catalog</button>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="glass-panel stat-card">
+          <h4>Active Borrowed Books</h4>
+          <div class="stat-val" id="stat-active-books">0</div>
+        </div>
+        <div class="glass-panel stat-card">
+          <h4>Overdue Alert</h4>
+          <div class="stat-val text-rose" id="stat-overdue">0</div>
+        </div>
+        <div class="glass-panel stat-card">
+          <h4>Pending Fines</h4>
+          <div class="stat-val text-amber" id="stat-fines">$0</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="view-catalog" class="view-section d-none">
+      <div class="glass-panel section-header">
+        <h2>Library Book Catalog</h2>
+        <div class="filter-controls">
+          <input type="text" id="catalog-search" class="input-field" placeholder="Filter by title/author..." />
+          <div class="categories" id="catalog-categories"></div>
+        </div>
+      </div>
+      <div id="catalog-grid" class="book-grid"></div>
+    </div>
+
+    <div id="view-borrow" class="view-section d-none">
+      <div class="glass-panel section-header">
+        <h2>My Borrow History</h2>
+      </div>
+      <div class="glass-panel">
+        <table class="custom-table" id="borrow-table">
+          <thead><tr><th>ID</th><th>Book Title</th><th>Issue Date</th><th>Due Date</th><th>Return Date</th><th>Status</th><th>Fine</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="view-fines" class="view-section d-none">
+      <div class="glass-panel section-header">
+        <h2 class="text-amber">Check Fine Statement</h2>
+        <h1 id="total-fine-display" class="text-amber">$0.00</h1>
+      </div>
+      <div class="glass-panel">
+        <table class="custom-table" id="student-fine-table">
+          <thead><tr><th>Fine ID</th><th>Item / Reason</th><th>Date</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="view-materials" class="view-section d-none">
+      <div class="glass-panel section-header">
+        <h2>Study Materials Search</h2>
+        <div class="filter-controls">
+          <select id="mat-year-filter" class="input-field"><option value="All">All Years</option><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option></select>
+          <select id="mat-sem-filter" class="input-field"><option value="All">All Semesters</option><option>Semester 1</option><option>Semester 2</option><option>Semester 3</option><option>Semester 4</option><option>Semester 5</option><option>Semester 6</option><option>Semester 7</option><option>Semester 8</option></select>
+        </div>
+      </div>
+      <div id="materials-grid" class="book-grid"></div>
+    </div>
+
+    <div id="view-profile" class="view-section d-none">
+      <div class="glass-panel section-header">
+        <h2>My Profile</h2>
+      </div>
+      <div class="glass-panel" style="padding: 2rem;">
+        <form id="profile-form" class="form-grid">
+          <div><label>Name</label><input type="text" id="prof-name" class="input-field" required/></div>
+          <div><label>Email</label><input type="email" id="prof-email" class="input-field" required/></div>
+          <div><label>Roll No</label><input type="text" id="prof-roll" class="input-field" required/></div>
+          <div><label>Department</label><input type="text" id="prof-dept" class="input-field" required/></div>
+          <div><label>Year</label><input type="text" id="prof-year" class="input-field" required/></div>
+          <div><label>Semester</label><input type="text" id="prof-sem" class="input-field" required/></div>
+          <button type="submit" class="btn btn-primary" style="grid-column: span 2;">Save Profile</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ADMIN VIEWS -->
+    <div id="view-admin-dashboard" class="view-section d-none">
+      <div class="dashboard-banner glass-panel" style="border-color: rgba(244,63,94,0.3)">
+        <h2>Librarian Admin Operations Control</h2>
+        <p>Continuous oversight of book inventory, student issue/returns, automated fines.</p>
+      </div>
+      <div class="metrics-grid">
+        <div class="glass-panel stat-card"><h4>Total Books</h4><div class="stat-val" id="admin-stat-books">0</div></div>
+        <div class="glass-panel stat-card"><h4>Active Loans</h4><div class="stat-val" id="admin-stat-loans">0</div></div>
+        <div class="glass-panel stat-card"><h4>Fine Revenue</h4><div class="stat-val text-emerald" id="admin-stat-fines">$0</div></div>
+      </div>
+    </div>
+
+    <div id="view-admin-inventory" class="view-section d-none">
+      <div class="glass-panel section-header">
+        <h2>Manage Book Inventory</h2>
+        <button class="btn btn-primary" onclick="app.openModal('book-modal')">Add New Book</button>
+      </div>
+      <div class="glass-panel">
+        <table class="custom-table" id="admin-inv-table">
+          <thead><tr><th>Title & Author</th><th>ISBN</th><th>Category</th><th>Stock</th><th>Actions</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="view-admin-issue-return" class="view-section d-none">
+      <div class="glass-panel section-header">
+        <h2>Issue & Return Book Status Management</h2>
+        <button class="btn btn-emerald" onclick="app.openModal('issue-modal')">Issue Book</button>
+      </div>
+      <div class="glass-panel">
+        <table class="custom-table" id="admin-return-table">
+          <thead><tr><th>ID</th><th>Student</th><th>Book</th><th>Issue</th><th>Due</th><th>Return</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="view-admin-fines" class="view-section d-none">
+      <div class="glass-panel section-header">
+        <h2 class="text-amber">Fine Ledger & Make Fine</h2>
+        <button class="btn btn-amber" onclick="app.openModal('make-fine-modal')">Make Fine</button>
+      </div>
+      <div class="glass-panel">
+        <table class="custom-table" id="admin-fine-table">
+          <thead><tr><th>ID</th><th>Student</th><th>Reason</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="view-admin-materials" class="view-section d-none">
+      <div class="glass-panel section-header">
+        <h2>Study Material Manager</h2>
+        <button class="btn btn-primary" onclick="app.openModal('mat-modal')">Upload Material</button>
+      </div>
+      <div class="glass-panel">
+        <table class="custom-table" id="admin-mat-table">
+          <thead><tr><th>Title & Subject</th><th>Year/Sem</th><th>Type</th><th>Actions</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Modals -->
+  <!-- Auth Modal -->
+  <div id="auth-modal" class="modal-overlay d-none" onclick="app.closeModal('auth-modal')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Login / Register</h3>
+        <button class="close-btn" onclick="app.closeModal('auth-modal')">✖</button>
+      </div>
+      <div class="demo-shortcuts glass-panel" style="margin-bottom: 1rem; padding: 1rem;">
+        <p style="font-size: 0.8rem; margin-bottom: 0.5rem; color: var(--primary);">Quick Demo Shortcuts:</p>
+        <button class="btn btn-sm btn-secondary" onclick="app.loginDemo('alex.morgan@college.edu', 'student')">Alex (Student)</button>
+        <button class="btn btn-sm btn-secondary" onclick="app.loginDemo('admin@library.edu', 'admin')">Admin Mode</button>
+      </div>
+      <form id="login-form">
+        <div style="margin-bottom: 1rem;">
+          <label>Email</label>
+          <input type="email" id="login-email" class="input-field" required />
+        </div>
+        <div style="margin-bottom: 1rem;">
+          <label>Role</label>
+          <select id="login-role" class="input-field">
+            <option value="student">Student</option>
+            <option value="admin">Librarian Admin</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Book Modal -->
+  <div id="book-modal" class="modal-overlay d-none" onclick="app.closeModal('book-modal')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 id="book-modal-title">Add / Edit Book</h3>
+        <button class="close-btn" onclick="app.closeModal('book-modal')">✖</button>
+      </div>
+      <form id="book-form" class="form-grid">
+        <input type="hidden" id="book-id" />
+        <div style="grid-column: span 2;"><label>Title</label><input type="text" id="book-title" class="input-field" required/></div>
+        <div><label>Author</label><input type="text" id="book-author" class="input-field" required/></div>
+        <div><label>ISBN</label><input type="text" id="book-isbn" class="input-field" required/></div>
+        <div><label>Category</label><input type="text" id="book-category" class="input-field" required/></div>
+        <div><label>Total Copies</label><input type="number" id="book-copies" class="input-field" required/></div>
+        <div><label>Shelf Location</label><input type="text" id="book-shelf" class="input-field" required/></div>
+        <div><label>Cover URL</label><input type="url" id="book-cover" class="input-field" /></div>
+        <button type="submit" class="btn btn-primary" style="grid-column: span 2;">Save Book</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Issue Book Modal -->
+  <div id="issue-modal" class="modal-overlay d-none" onclick="app.closeModal('issue-modal')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Issue Book</h3>
+        <button class="close-btn" onclick="app.closeModal('issue-modal')">✖</button>
+      </div>
+      <form id="issue-form" class="form-grid">
+        <div style="grid-column: span 2;"><label>Student</label><select id="issue-student" class="input-field" required></select></div>
+        <div style="grid-column: span 2;"><label>Book</label><select id="issue-book" class="input-field" required></select></div>
+        <div><label>Issue Date</label><input type="date" id="issue-date" class="input-field" required/></div>
+        <div><label>Due Date</label><input type="date" id="issue-due" class="input-field" required/></div>
+        <button type="submit" class="btn btn-emerald" style="grid-column: span 2;">Confirm Issue</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Make Fine Modal -->
+  <div id="make-fine-modal" class="modal-overlay d-none" onclick="app.closeModal('make-fine-modal')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Make Fine</h3>
+        <button class="close-btn" onclick="app.closeModal('make-fine-modal')">✖</button>
+      </div>
+      <form id="make-fine-form" class="form-grid">
+        <div style="grid-column: span 2;"><label>Student</label><select id="fine-student" class="input-field" required></select></div>
+        <div style="grid-column: span 2;"><label>Reason / Book Title</label><input type="text" id="fine-reason" class="input-field" required/></div>
+        <div style="grid-column: span 2;"><label>Amount ($)</label><input type="number" id="fine-amount" class="input-field" required/></div>
+        <button type="submit" class="btn btn-amber" style="grid-column: span 2;">Assess Fine</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Upload Material Modal -->
+  <div id="mat-modal" class="modal-overlay d-none" onclick="app.closeModal('mat-modal')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Upload Material</h3>
+        <button class="close-btn" onclick="app.closeModal('mat-modal')">✖</button>
+      </div>
+      <form id="mat-form" class="form-grid">
+        <input type="hidden" id="mat-id" />
+        <div style="grid-column: span 2;"><label>Title</label><input type="text" id="mat-title" class="input-field" required/></div>
+        <div><label>Year</label><select id="mat-year" class="input-field" required><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option></select></div>
+        <div><label>Semester</label><select id="mat-sem" class="input-field" required><option>Semester 1</option><option>Semester 2</option><option>Semester 3</option><option>Semester 4</option><option>Semester 5</option><option>Semester 6</option><option>Semester 7</option><option>Semester 8</option></select></div>
+        <div><label>Subject</label><input type="text" id="mat-subject" class="input-field" required/></div>
+        <div><label>Type</label><select id="mat-type" class="input-field"><option>Lecture Notes</option><option>Question Paper</option></select></div>
+        <button type="submit" class="btn btn-primary" style="grid-column: span 2;">Publish Material</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Book Detail Modal -->
+  <div id="book-detail-modal" class="modal-overlay d-none" onclick="app.closeModal('book-detail-modal')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Book Details</h3>
+        <button class="close-btn" onclick="app.closeModal('book-detail-modal')">✖</button>
+      </div>
+      <div id="book-detail-content" style="padding-top: 1rem; color: var(--text-main);"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

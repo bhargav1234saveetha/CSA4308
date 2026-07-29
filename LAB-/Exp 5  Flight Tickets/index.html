@@ -1,0 +1,1923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SkyGo - Flight Reservation System</title>
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f4f7fb;
+    color: #333;
+}
+
+nav {
+    background: #062f5b;
+    color: white;
+    padding: 18px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 27px;
+    font-weight: bold;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin-left: 18px;
+}
+
+nav a:hover {
+    color: #ffd166;
+}
+
+/* HERO */
+
+.hero {
+    min-height: 500px;
+
+    background:
+    linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55)),
+    url("https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1600&q=80");
+
+    background-size: cover;
+    background-position: center;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    color: white;
+    text-align: center;
+    padding: 30px;
+}
+
+.hero h1 {
+    font-size: 50px;
+    margin-bottom: 12px;
+}
+
+.hero p {
+    font-size: 20px;
+    margin-bottom: 30px;
+}
+
+/* SEARCH */
+
+.search-box {
+    background: white;
+    color: #333;
+    padding: 25px;
+    border-radius: 10px;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+
+    box-shadow: 0 5px 20px rgba(0,0,0,.25);
+}
+
+.search-box label {
+    display: block;
+    text-align: left;
+    font-weight: bold;
+    margin-bottom: 7px;
+}
+
+input,
+select,
+textarea {
+    padding: 11px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 210px;
+}
+
+button {
+    background: #ff6b00;
+    color: white;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+button:hover {
+    background: #d95b00;
+}
+
+/* GENERAL */
+
+section {
+    padding: 60px 8%;
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.title h2 {
+    font-size: 32px;
+    color: #062f5b;
+}
+
+.title p {
+    margin-top: 8px;
+    color: #777;
+}
+
+/* FLIGHTS */
+
+.flight-card {
+    max-width: 1050px;
+    margin: 20px auto;
+    background: white;
+    padding: 25px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 25px;
+
+    border-radius: 10px;
+    box-shadow: 0 3px 15px rgba(0,0,0,.1);
+}
+
+.airline h3 {
+    color: #062f5b;
+    margin-bottom: 7px;
+}
+
+.flight-route {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.time {
+    font-size: 23px;
+    font-weight: bold;
+    color: #062f5b;
+}
+
+.flight-line {
+    color: #888;
+}
+
+.flight-price {
+    text-align: right;
+}
+
+.price {
+    font-size: 25px;
+    font-weight: bold;
+    color: #ff6b00;
+}
+
+.available {
+    color: green;
+    font-weight: bold;
+    margin: 7px 0;
+}
+
+/* FEATURES */
+
+.features {
+    background: #062f5b;
+    color: white;
+}
+
+.feature-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 60px;
+}
+
+.feature {
+    text-align: center;
+    width: 170px;
+}
+
+.feature span {
+    font-size: 40px;
+}
+
+.feature h3 {
+    margin-top: 12px;
+}
+
+/* FORM */
+
+.form-box {
+    max-width: 750px;
+    margin: auto;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 3px 15px rgba(0,0,0,.1);
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.form-row div {
+    flex: 1;
+}
+
+.form-row input,
+.form-row select {
+    width: 100%;
+}
+
+.form-box label {
+    font-weight: bold;
+}
+
+/* SEAT */
+
+.aircraft {
+    max-width: 520px;
+    margin: auto;
+    background: white;
+    padding: 30px;
+    border-radius: 50px 50px 10px 10px;
+    box-shadow: 0 3px 15px rgba(0,0,0,.12);
+}
+
+.cockpit {
+    text-align: center;
+    padding: 20px;
+    border-bottom: 2px solid #ddd;
+    margin-bottom: 25px;
+    font-size: 28px;
+}
+
+.seats {
+    display: grid;
+    grid-template-columns: repeat(6,1fr);
+    gap: 12px;
+}
+
+.seat {
+    text-align: center;
+}
+
+.seat input {
+    width: auto;
+}
+
+.seat label {
+    display: block;
+    background: #e8f5e9;
+    border: 2px solid #4caf50;
+    padding: 10px 4px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* TICKET */
+
+.ticket {
+    max-width: 900px;
+    margin: auto;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,.15);
+}
+
+.ticket-header {
+    background: #062f5b;
+    color: white;
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.ticket-body {
+    padding: 30px;
+}
+
+.ticket-route {
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    margin: 25px 0;
+}
+
+.airport-code {
+    font-size: 32px;
+    font-weight: bold;
+    color: #062f5b;
+}
+
+.ticket-grid {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 25px;
+    margin-top: 25px;
+}
+
+.ticket-footer {
+    background: #f2f4f7;
+    padding: 18px;
+    text-align: center;
+}
+
+/* HISTORY */
+
+.booking-card {
+    max-width: 950px;
+    margin: 15px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+
+    box-shadow: 0 3px 12px rgba(0,0,0,.08);
+}
+
+/* STATUS */
+
+.status-box {
+    max-width: 750px;
+    margin: 25px auto;
+    padding: 25px;
+    background: white;
+    border-left: 5px solid green;
+    border-radius: 7px;
+}
+
+.confirmed {
+    color: green;
+    font-weight: bold;
+}
+
+/* FEEDBACK */
+
+.feedback {
+    background: #eef3f8;
+}
+
+/* ADMIN */
+
+.admin {
+    background: #e7edf3;
+}
+
+.admin-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 20px;
+}
+
+.admin-card {
+    background: white;
+    padding: 30px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,.1);
+}
+
+.admin-card span {
+    font-size: 40px;
+}
+
+.admin-card h3 {
+    margin: 15px 0 10px;
+    color: #062f5b;
+}
+
+.admin-card p {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* FOOTER */
+
+footer {
+    background: #031f3b;
+    color: #ddd;
+    padding: 35px;
+    text-align: center;
+}
+
+footer h2 {
+    color: white;
+    margin-bottom: 15px;
+}
+
+footer a {
+    color: #ffd166;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+/* MOBILE */
+
+@media(max-width:850px) {
+
+    nav {
+        flex-direction: column;
+    }
+
+    nav div {
+        margin-top: 15px;
+        text-align: center;
+    }
+
+    nav a {
+        display: inline-block;
+        margin: 5px;
+    }
+
+    .hero h1 {
+        font-size: 34px;
+    }
+
+    .search-box {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .search-box input,
+    .search-box select {
+        width: 100%;
+    }
+
+    .flight-card,
+    .form-row,
+    .booking-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .flight-route {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .flight-price {
+        text-align: left;
+    }
+
+    .ticket-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .admin-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<nav>
+
+<div class="logo">
+✈ SkyGo
+</div>
+
+<div>
+<a href="#home">Home</a>
+<a href="#flights">Flights</a>
+<a href="#booking">Book</a>
+<a href="#status">Status</a>
+<a href="#tickets">My Tickets</a>
+<a href="#feedback">Feedback</a>
+<a href="#login">Login</a>
+<a href="#admin">Admin</a>
+</div>
+
+</nav>
+
+
+<!-- HOME -->
+
+<div class="hero" id="home">
+
+<h1>Fly Beyond Boundaries</h1>
+
+<p>Search, Compare & Book Your Perfect Flight</p>
+
+<form class="search-box" action="#flights">
+
+<div>
+<label>From</label>
+
+<select required>
+<option value="">Select City</option>
+<option>Chennai (MAA)</option>
+<option>Bengaluru (BLR)</option>
+<option>Hyderabad (HYD)</option>
+<option>Mumbai (BOM)</option>
+<option>Delhi (DEL)</option>
+<option>Kolkata (CCU)</option>
+</select>
+</div>
+
+
+<div>
+<label>To</label>
+
+<select required>
+<option value="">Select City</option>
+<option>Delhi (DEL)</option>
+<option>Mumbai (BOM)</option>
+<option>Bengaluru (BLR)</option>
+<option>Hyderabad (HYD)</option>
+<option>Chennai (MAA)</option>
+<option>Kolkata (CCU)</option>
+</select>
+</div>
+
+
+<div>
+<label>Departure</label>
+<input type="date" required>
+</div>
+
+
+<div>
+<label>Class</label>
+
+<select>
+<option>Economy</option>
+<option>Premium Economy</option>
+<option>Business</option>
+<option>First Class</option>
+</select>
+</div>
+
+
+<div>
+<br>
+<button type="submit">Search Flights</button>
+</div>
+
+</form>
+
+</div>
+
+
+<!-- FLIGHT RESULTS -->
+
+<section id="flights">
+
+<div class="title">
+<h2>Available Flights</h2>
+<p>Choose the best flight for your journey</p>
+</div>
+
+
+<div class="flight-card">
+
+<div class="airline">
+<h3>✈ IndiGo</h3>
+<p>6E-2287</p>
+<p>Airbus A320</p>
+</div>
+
+<div class="flight-route">
+
+<div>
+<p class="time">06:20</p>
+<p>MAA</p>
+<p>Chennai</p>
+</div>
+
+<div class="flight-line">
+<p>2h 50m</p>
+<p>──────── ✈ ────────</p>
+<p>Non-stop</p>
+</div>
+
+<div>
+<p class="time">09:10</p>
+<p>DEL</p>
+<p>New Delhi</p>
+</div>
+
+</div>
+
+<div class="flight-price">
+<p class="price">₹5,499</p>
+<p class="available">12 seats left</p>
+
+<a href="#seats">
+<button>Select Flight</button>
+</a>
+</div>
+
+</div>
+
+
+<div class="flight-card">
+
+<div class="airline">
+<h3>✈ Air India</h3>
+<p>AI-539</p>
+<p>Airbus A321</p>
+</div>
+
+<div class="flight-route">
+
+<div>
+<p class="time">09:45</p>
+<p>MAA</p>
+<p>Chennai</p>
+</div>
+
+<div class="flight-line">
+<p>2h 55m</p>
+<p>──────── ✈ ────────</p>
+<p>Non-stop</p>
+</div>
+
+<div>
+<p class="time">12:40</p>
+<p>DEL</p>
+<p>New Delhi</p>
+</div>
+
+</div>
+
+<div class="flight-price">
+<p class="price">₹6,250</p>
+<p class="available">8 seats left</p>
+
+<a href="#seats">
+<button>Select Flight</button>
+</a>
+</div>
+
+</div>
+
+
+<div class="flight-card">
+
+<div class="airline">
+<h3>✈ Akasa Air</h3>
+<p>QP-1482</p>
+<p>Boeing 737 MAX</p>
+</div>
+
+<div class="flight-route">
+
+<div>
+<p class="time">14:10</p>
+<p>MAA</p>
+<p>Chennai</p>
+</div>
+
+<div class="flight-line">
+<p>3h 00m</p>
+<p>──────── ✈ ────────</p>
+<p>Non-stop</p>
+</div>
+
+<div>
+<p class="time">17:10</p>
+<p>DEL</p>
+<p>New Delhi</p>
+</div>
+
+</div>
+
+<div class="flight-price">
+<p class="price">₹5,890</p>
+<p class="available">20 seats left</p>
+
+<a href="#seats">
+<button>Select Flight</button>
+</a>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- FEATURES -->
+
+<section class="features">
+
+<div class="feature-container">
+
+<div class="feature">
+<span>🔎</span>
+<h3>Easy Search</h3>
+</div>
+
+<div class="feature">
+<span>💺</span>
+<h3>Choose Seats</h3>
+</div>
+
+<div class="feature">
+<span>🔒</span>
+<h3>Secure Payment</h3>
+</div>
+
+<div class="feature">
+<span>🎫</span>
+<h3>E-Tickets</h3>
+</div>
+
+<div class="feature">
+<span>📱</span>
+<h3>Mobile Friendly</h3>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- SEAT SELECTION -->
+
+<section id="seats">
+
+<div class="title">
+<h2>Select Your Seat</h2>
+<p>Choose your preferred aircraft seat</p>
+</div>
+
+<div class="aircraft">
+
+<div class="cockpit">
+✈ Cockpit
+</div>
+
+<div class="seats">
+
+<div class="seat">
+<input type="radio" name="seat" id="1a">
+<label for="1a">1A</label>
+</div>
+
+<div class="seat">
+<input type="radio" name="seat" id="1b">
+<label for="1b">1B</label>
+</div>
+
+<div class="seat">
+<input type="radio" name="seat" id="1c">
+<label for="1c">1C</label>
+</div>
+
+<div class="seat">
+<input type="radio" name="seat" id="1d">
+<label for="1d">1D</label>
+</div>
+
+<div class="seat">
+<input type="radio" name="seat" id="1e">
+<label for="1e">1E</label>
+</div>
+
+<div class="seat">
+<input type="radio" name="seat" id="1f">
+<label for="1f">1F</label>
+</div>
+
+
+<div class="seat">
+<input type="radio" name="seat" id="2a">
+<label for="2a">2A</label>
+</div>
+
+<div class="seat">
+<input type="radio" name="seat" id="2b">
+<label for="2b">2B</label>
+</div>
+
+<div class="seat">
+<input type="radio" name="seat" id="2c">
+<label for="2c">2C</label>
+</div>
+
+<div class="seat">
+<input type="radio" name="seat" id="2d">
+<label for="2d">2D</label>
+</div>
+
+<div class="seat">
+<input type="radio" name="seat" id="2e">
+<label for="2e">2E</label>
+</div>
+
+<div class="seat">
+<input type="radio" name="seat" id="2f">
+<label for="2f">2F</label>
+</div>
+
+
+<div class="seat">
+<input type="radio" name="seat" id="3a">
+<label for="3a">3A</label>
+</div>
+
+<div class="seat">
+<input type="radio" name="seat" id="3b">
+<label for="3b">3B</label>
+</div>
+
+<div class="seat">
+<input type="radio" name="seat" id="3c">
+<label for="3c">3C</label>
+</div>
+
+<div class="seat">
+<input type="radio" name="seat" id="3d">
+<label for="3d">3D</label>
+</div>
+
+<div class="seat">
+<input type="radio" name="seat" id="3e">
+<label for="3e">3E</label>
+</div>
+
+<div class="seat">
+<input type="radio" name="seat" id="3f">
+<label for="3f">3F</label>
+</div>
+
+</div>
+
+<br><br>
+
+<center>
+<a href="#booking">
+<button>Continue Booking</button>
+</a>
+</center>
+
+</div>
+
+</section>
+
+
+<!-- BOOK TICKET -->
+
+<section id="booking">
+
+<div class="title">
+<h2>Book Flight Ticket</h2>
+<p>Enter passenger and travel details</p>
+</div>
+
+<div class="form-box">
+
+<form action="#payment">
+
+<div class="form-row">
+
+<div>
+<label>First Name</label>
+<br><br>
+<input type="text" placeholder="First name" required>
+</div>
+
+<div>
+<label>Last Name</label>
+<br><br>
+<input type="text" placeholder="Last name" required>
+</div>
+
+</div>
+
+
+<div class="form-row">
+
+<div>
+<label>Date of Birth</label>
+<br><br>
+<input type="date" required>
+</div>
+
+<div>
+<label>Gender</label>
+<br><br>
+
+<select required>
+<option value="">Select</option>
+<option>Male</option>
+<option>Female</option>
+<option>Other</option>
+</select>
+
+</div>
+
+</div>
+
+
+<div class="form-row">
+
+<div>
+<label>Email</label>
+<br><br>
+<input type="email" placeholder="Email address" required>
+</div>
+
+<div>
+<label>Mobile Number</label>
+<br><br>
+<input type="tel" placeholder="Mobile number" required>
+</div>
+
+</div>
+
+
+<div class="form-row">
+
+<div>
+<label>Nationality</label>
+<br><br>
+<input type="text" value="Indian">
+</div>
+
+<div>
+<label>Travel Class</label>
+<br><br>
+
+<select>
+<option>Economy</option>
+<option>Premium Economy</option>
+<option>Business</option>
+<option>First Class</option>
+</select>
+
+</div>
+
+</div>
+
+<button type="submit">
+Continue to Payment
+</button>
+
+</form>
+
+</div>
+
+</section>
+
+
+<!-- PAYMENT -->
+
+<section id="payment">
+
+<div class="title">
+<h2>Ticket Payment</h2>
+<p>Complete your flight reservation</p>
+</div>
+
+<div class="form-box">
+
+<h3>Fare Details</h3>
+
+<br>
+
+<p>Base Fare: ₹4,650</p>
+
+<br>
+
+<p>Taxes & Fees: ₹649</p>
+
+<br>
+
+<p>Seat Selection: ₹200</p>
+
+<br>
+
+<hr>
+
+<br>
+
+<h2>Total: ₹5,499</h2>
+
+<br><br>
+
+<form action="#eticket">
+
+<label>Payment Method</label>
+
+<br><br>
+
+<select required>
+<option value="">Select Payment</option>
+<option>UPI</option>
+<option>Credit Card</option>
+<option>Debit Card</option>
+<option>Net Banking</option>
+</select>
+
+<br><br>
+
+<label>Transaction / UPI ID</label>
+
+<br><br>
+
+<input type="text"
+placeholder="Enter payment details"
+required>
+
+<br><br>
+
+<button type="submit">
+Pay ₹5,499
+</button>
+
+</form>
+
+</div>
+
+</section>
+
+
+<!-- E-TICKET -->
+
+<section id="eticket">
+
+<div class="title">
+<h2>Booking Confirmed ✓</h2>
+<p>Your e-ticket is ready</p>
+</div>
+
+
+<div class="ticket">
+
+<div class="ticket-header">
+
+<h2>✈ SkyGo</h2>
+
+<h3>BOARDING PASS</h3>
+
+</div>
+
+<div class="ticket-body">
+
+<p>
+<strong>Booking Reference:</strong> SKY8X42P
+</p>
+
+<p>
+<strong>Passenger:</strong> Rahul Kumar
+</p>
+
+
+<div class="ticket-route">
+
+<div>
+<p class="airport-code">MAA</p>
+<p>Chennai</p>
+<p>06:20</p>
+</div>
+
+<div>
+<p>──────── ✈ ────────</p>
+<p>2h 50m</p>
+</div>
+
+<div>
+<p class="airport-code">DEL</p>
+<p>New Delhi</p>
+<p>09:10</p>
+</div>
+
+</div>
+
+
+<hr>
+
+
+<div class="ticket-grid">
+
+<div>
+<strong>Flight</strong>
+<p>6E-2287</p>
+</div>
+
+<div>
+<strong>Date</strong>
+<p>15 Aug 2026</p>
+</div>
+
+<div>
+<strong>Class</strong>
+<p>Economy</p>
+</div>
+
+<div>
+<strong>Seat</strong>
+<p>2A</p>
+</div>
+
+<div>
+<strong>Terminal</strong>
+<p>T1</p>
+</div>
+
+<div>
+<strong>Gate</strong>
+<p>G12</p>
+</div>
+
+<div>
+<strong>Boarding</strong>
+<p>05:40</p>
+</div>
+
+<div>
+<strong>Status</strong>
+<p class="confirmed">CONFIRMED</p>
+</div>
+
+</div>
+
+</div>
+
+
+<div class="ticket-footer">
+
+<p>
+Please arrive at the airport at least 2 hours before departure.
+</p>
+
+<br>
+
+<button>Print Ticket</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- BOOKING STATUS -->
+
+<section id="status">
+
+<div class="title">
+
+<h2>View Booking Status</h2>
+
+<p>Check your flight reservation</p>
+
+</div>
+
+
+<div class="form-box">
+
+<form>
+
+<label>Booking Reference / PNR</label>
+
+<br><br>
+
+<input type="text"
+placeholder="Example: SKY8X42P"
+required>
+
+<br><br>
+
+<label>Passenger Last Name</label>
+
+<br><br>
+
+<input type="text"
+placeholder="Enter last name"
+required>
+
+<br><br>
+
+<button type="submit">
+Check Booking
+</button>
+
+</form>
+
+</div>
+
+
+<div class="status-box">
+
+<h3>Booking: SKY8X42P</h3>
+
+<br>
+
+<p>Flight: 6E-2287</p>
+
+<p>Chennai (MAA) → New Delhi (DEL)</p>
+
+<p>Date: 15 August 2026</p>
+
+<p>Passenger: Rahul Kumar</p>
+
+<p>Seat: 2A</p>
+
+<br>
+
+<p>
+Status:
+<span class="confirmed">CONFIRMED ✓</span>
+</p>
+
+</div>
+
+</section>
+
+
+<!-- MY TICKETS -->
+
+<section id="tickets">
+
+<div class="title">
+
+<h2>My Tickets</h2>
+
+<p>View booking history and travel itinerary</p>
+
+</div>
+
+
+<div class="booking-card">
+
+<div>
+
+<h3>✈ Chennai → New Delhi</h3>
+
+<br>
+
+<p>Booking ID: SKY8X42P</p>
+
+<p>Flight: 6E-2287</p>
+
+<p>Date: 15 August 2026</p>
+
+<p>Seat: 2A</p>
+
+<p class="confirmed">Confirmed</p>
+
+</div>
+
+<div>
+
+<h3>₹5,499</h3>
+
+<br>
+
+<a href="#eticket">
+<button>View Ticket</button>
+</a>
+
+<br><br>
+
+<a href="#cancel">
+<button>Cancel Ticket</button>
+</a>
+
+</div>
+
+</div>
+
+
+<div class="booking-card">
+
+<div>
+
+<h3>✈ Bengaluru → Chennai</h3>
+
+<br>
+
+<p>Booking ID: SKY4J72A</p>
+
+<p>Flight: AI-583</p>
+
+<p>Date: 12 July 2026</p>
+
+<p>Seat: 7F</p>
+
+<p>Journey Completed</p>
+
+</div>
+
+<div>
+
+<h3>₹4,850</h3>
+
+<br>
+
+<button>View Ticket</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- CANCEL -->
+
+<section id="cancel">
+
+<div class="title">
+
+<h2>Cancel Flight Ticket</h2>
+
+<p>Submit your cancellation request</p>
+
+</div>
+
+
+<div class="form-box">
+
+<form>
+
+<label>Booking Reference</label>
+
+<br><br>
+
+<input type="text"
+placeholder="Enter Booking ID"
+required>
+
+<br><br>
+
+<label>Passenger Last Name</label>
+
+<br><br>
+
+<input type="text"
+placeholder="Enter last name"
+required>
+
+<br><br>
+
+<label>Reason for Cancellation</label>
+
+<br><br>
+
+<select>
+<option>Change of Travel Plan</option>
+<option>Personal Reason</option>
+<option>Booked Wrong Date</option>
+<option>Medical Reason</option>
+<option>Other</option>
+</select>
+
+<br><br>
+
+<button type="submit">
+Cancel Ticket
+</button>
+
+</form>
+
+</div>
+
+</section>
+
+
+<!-- FEEDBACK -->
+
+<section class="feedback" id="feedback">
+
+<div class="title">
+
+<h2>Customer Feedback</h2>
+
+<p>Tell us about your booking experience</p>
+
+</div>
+
+
+<div class="form-box">
+
+<form>
+
+<label>Name</label>
+
+<br><br>
+
+<input type="text"
+placeholder="Your name"
+required>
+
+<br><br>
+
+<label>Email</label>
+
+<br><br>
+
+<input type="email"
+placeholder="Your email"
+required>
+
+<br><br>
+
+<label>Rating</label>
+
+<br><br>
+
+<select>
+
+<option>⭐⭐⭐⭐⭐ Excellent</option>
+<option>⭐⭐⭐⭐ Very Good</option>
+<option>⭐⭐⭐ Good</option>
+<option>⭐⭐ Average</option>
+<option>⭐ Poor</option>
+
+</select>
+
+<br><br>
+
+<label>Feedback</label>
+
+<br><br>
+
+<textarea
+rows="5"
+style="width:100%;"
+placeholder="Share your experience...">
+</textarea>
+
+<br><br>
+
+<button type="submit">
+Submit Feedback
+</button>
+
+</form>
+
+</div>
+
+</section>
+
+
+<!-- LOGIN -->
+
+<section id="login">
+
+<div class="title">
+
+<h2>User Login</h2>
+
+<p>Login to manage your flight reservations</p>
+
+</div>
+
+
+<div class="form-box">
+
+<form>
+
+<label>Email / User ID</label>
+
+<br><br>
+
+<input type="text"
+placeholder="Enter User ID"
+required>
+
+<br><br>
+
+<label>Password</label>
+
+<br><br>
+
+<input type="password"
+placeholder="Enter Password"
+required>
+
+<br><br>
+
+<button type="submit">
+Login
+</button>
+
+<br><br>
+
+<a href="#forgot">Forgot Password?</a>
+
+&nbsp; | &nbsp;
+
+<a href="#register">Create Account</a>
+
+</form>
+
+</div>
+
+</section>
+
+
+<!-- REGISTER -->
+
+<section id="register">
+
+<div class="title">
+
+<h2>Create Account</h2>
+
+<p>Register to book your flights</p>
+
+</div>
+
+
+<div class="form-box">
+
+<form>
+
+<div class="form-row">
+
+<div>
+
+<label>First Name</label>
+
+<br><br>
+
+<input type="text" required>
+
+</div>
+
+<div>
+
+<label>Last Name</label>
+
+<br><br>
+
+<input type="text" required>
+
+</div>
+
+</div>
+
+
+<div class="form-row">
+
+<div>
+
+<label>Email</label>
+
+<br><br>
+
+<input type="email" required>
+
+</div>
+
+<div>
+
+<label>Mobile Number</label>
+
+<br><br>
+
+<input type="tel" required>
+
+</div>
+
+</div>
+
+
+<div class="form-row">
+
+<div>
+
+<label>Password</label>
+
+<br><br>
+
+<input type="password" required>
+
+</div>
+
+<div>
+
+<label>Confirm Password</label>
+
+<br><br>
+
+<input type="password" required>
+
+</div>
+
+</div>
+
+<button type="submit">
+Register
+</button>
+
+</form>
+
+</div>
+
+</section>
+
+
+<!-- FORGOT PASSWORD -->
+
+<section id="forgot">
+
+<div class="title">
+
+<h2>Forgot Password</h2>
+
+<p>Recover your SkyGo account</p>
+
+</div>
+
+
+<div class="form-box">
+
+<form>
+
+<label>Registered Email</label>
+
+<br><br>
+
+<input type="email"
+placeholder="Enter registered email"
+required>
+
+<br><br>
+
+<button type="submit">
+Send Reset Link
+</button>
+
+</form>
+
+</div>
+
+</section>
+
+
+<!-- ADMIN -->
+
+<section class="admin" id="admin">
+
+<div class="title">
+
+<h2>Administrator Dashboard</h2>
+
+<p>Manage the complete airline reservation system</p>
+
+</div>
+
+
+<div class="admin-grid">
+
+
+<div class="admin-card">
+
+<span>✈️</span>
+
+<h3>Manage Flights</h3>
+
+<p>
+Add, edit and remove flight information.
+</p>
+
+<button>Manage Flights</button>
+
+</div>
+
+
+<div class="admin-card">
+
+<span>📅</span>
+
+<h3>Flight Schedules</h3>
+
+<p>
+Manage departure and arrival schedules.
+</p>
+
+<button>Schedules</button>
+
+</div>
+
+
+<div class="admin-card">
+
+<span>💺</span>
+
+<h3>Seat Inventory</h3>
+
+<p>
+Manage available and reserved seats.
+</p>
+
+<button>Manage Seats</button>
+
+</div>
+
+
+<div class="admin-card">
+
+<span>💰</span>
+
+<h3>Flight Fares</h3>
+
+<p>
+Update Economy, Business and First Class fares.
+</p>
+
+<button>Manage Fares</button>
+
+</div>
+
+
+<div class="admin-card">
+
+<span>🎫</span>
+
+<h3>Reservations</h3>
+
+<p>
+View and manage passenger bookings.
+</p>
+
+<button>Reservations</button>
+
+</div>
+
+
+<div class="admin-card">
+
+<span>👥</span>
+
+<h3>User Accounts</h3>
+
+<p>
+Manage registered customer accounts.
+</p>
+
+<button>Manage Users</button>
+
+</div>
+
+
+<div class="admin-card">
+
+<span>💳</span>
+
+<h3>Payments</h3>
+
+<p>
+View payment and transaction details.
+</p>
+
+<button>Payments</button>
+
+</div>
+
+
+<div class="admin-card">
+
+<span>❌</span>
+
+<h3>Cancellations</h3>
+
+<p>
+Manage ticket cancellations and refunds.
+</p>
+
+<button>Cancellations</button>
+
+</div>
+
+
+<div class="admin-card">
+
+<span>⭐</span>
+
+<h3>Feedback</h3>
+
+<p>
+View and manage customer feedback.
+</p>
+
+<button>View Feedback</button>
+
+</div>
+
+
+<div class="admin-card">
+
+<span>📊</span>
+
+<h3>Admin Reports</h3>
+
+<p>
+Generate booking, revenue and passenger reports.
+</p>
+
+<button>Generate Report</button>
+
+</div>
+
+
+<div class="admin-card">
+
+<span>📈</span>
+
+<h3>Flight Statistics</h3>
+
+<p>
+View flight occupancy and booking statistics.
+</p>
+
+<button>View Statistics</button>
+
+</div>
+
+
+<div class="admin-card">
+
+<span>⚙️</span>
+
+<h3>System Settings</h3>
+
+<p>
+Manage airline and reservation settings.
+</p>
+
+<button>Settings</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+<h2>✈ SkyGo</h2>
+
+<p>
+Online Flight Reservation System
+</p>
+
+<br>
+
+<a href="#home">Home</a>
+<a href="#flights">Flights</a>
+<a href="#status">Booking Status</a>
+<a href="#tickets">My Tickets</a>
+<a href="#feedback">Feedback</a>
+
+<br><br>
+
+<p>
+📞 Customer Support: 1800-555-2026
+</p>
+
+<p>
+✉ support@skygo.com
+</p>
+
+<br>
+
+<p>
+© 2026 SkyGo Airlines. All Rights Reserved.
+</p>
+
+</footer>
+
+</body>
+</html>
